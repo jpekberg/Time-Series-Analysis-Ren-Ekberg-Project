@@ -1,0 +1,56 @@
+---
+title: "Ekberg_Ren_ENV790_TSA_FinalProject"
+output: html_document
+date: "2023-04-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+#importing data
+solar_annual <- read.csv(
+  file="./Data/Net_generation_solar_for_all_sectors_annual.csv",
+  header=TRUE,
+  skip=4)
+
+solar_monthly <- read.csv(
+  file="./Data/Net_generation_solar_for_all_sectors_monthly.csv",
+  header=TRUE,
+  skip=4)
+
+wind_annual <- read.csv(
+  file="./Data/Net_generation_wind_all_sectors_annual.csv",
+  header=TRUE,
+  skip=4)
+
+wind_monthly <- read.csv(
+  file="./Data/Net_generation_wind_all_sectors_monthly.csv",
+  header=TRUE,
+  skip=4)
+```
+
+```{r}
+#Inspect data
+#head(electricity_price)
+nvar <- ncol(electricity_price) - 1
+nobs <- nrow(electricity_price)
+
+#Preparing the data - create date object and rename columns
+electricity_price_processed <-
+  electricity_price %>%
+  mutate( Month = my(Month) ) %>% 
+  rename( All.sectors = all.sectors.cents.per.kilowatthour ) %>% 
+  rename( Residential = residential.cents.per.kilowatthour ) %>% 
+  rename( Commercial = commercial.cents.per.kilowatthour ) %>% 
+  rename( Industrial = industrial.cents.per.kilowatthour ) %>% 
+  arrange( Month )
+
+#head(electricity_price_processed)
+#summary(electricity_price_processed)
+
+#No NAs so we don't need to worry about missing values
+```
