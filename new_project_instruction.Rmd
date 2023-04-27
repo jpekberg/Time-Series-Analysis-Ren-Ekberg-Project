@@ -27,18 +27,29 @@ solar_annual_o <- read.csv(
   file="./Data/Net_generation_solar_for_all_sectors_annual.csv",
   header=TRUE,
   skip=4)
+
+solar_annual_o <- na.omit(solar_annual_o)
+
 solar_monthly_o <- read.csv(
   file="./Data/Net_generation_solar_for_all_sectors_monthly.csv",
   header=TRUE,
   skip=4)
+solar_monthly_o <- solar_monthly_o[,1:2]
+solar_monthly_o <- na.omit(solar_monthly_o)
+
 wind_annual_o <- read.csv(
   file="./Data/Net_generation_wind_all_sectors_annual.csv",
   header=TRUE,
   skip=4)
+wind_annual_o <- wind_annual_o[,1:2]
+wind_annual_o <- na.omit(wind_annual_o)
+
 wind_monthly_o <- read.csv(
   file="./Data/Net_generation_wind_all_sectors_monthly.csv",
   header=TRUE,
   skip=4)
+wind_monthly_o <- wind_monthly_o[,1:2]
+wind_monthly_o <- na.omit(wind_monthly_o )
 ```
 
 ```{r}
@@ -57,5 +68,45 @@ wind_monthly <- wind_monthly_o %>%
 
 #head(electricity_price_processed)
 #summary(electricity_price_processed)
-#No NAs so we don't need to worry about missing values
+#Inspect Data
+head(solar_annual)
+nvar <- ncol(solar_annual) - 1
+nobs <- nrow(solar_annual)
+```
+
+```{r}
+ts_solar_annual <- ts(solar_annual[,2:(nvar+1)],
+                  frequency=12)
+ts_solar_monthly <- ts(solar_monthly[,2:(nvar+1)],frequency=12)
+ts_wind_annual <- ts(wind_annual[,2:(nvar+1)],frequency=12)
+ts_wind_monthly <- ts(wind_monthly[,2:(nvar+1)],frequency=12)
+```
+
+```{r}
+par(mfrow=c(1,2))
+ACF_Plot <- Acf(solar_annual$solar_annual_gen, lag = 5, plot = TRUE)
+PACF_Plot <- Pacf(solar_annual$solar_annual_gen, lag = 5)
+
+par(mfrow=c(1,2))
+ACF_Plot <- Acf(solar_monthly$solar_monthly_gen, lag = 40, plot = TRUE)
+PACF_Plot <- Pacf(solar_monthly$solar_monthly_gen, lag = 40)
+
+par(mfrow=c(1,2))
+ACF_Plot <- Acf(wind_annual$wind_annual_gen, lag = 5, plot = TRUE)
+PACF_Plot <- Pacf(wind_annual$wind_annual_gen, lag = 5)
+
+par(mfrow=c(1,2))
+ACF_Plot <- Acf(wind_monthly$wind_monthly_gen, lag = 40, plot = TRUE)
+PACF_Plot <- Pacf(wind_monthly$wind_monthly_gen, lag = 40)
+```
+
+```{r}
+#not working, need to be fixed
+TS_Plot <- 
+  ggplot(electricity_price_processed, aes(x=Month, y=Residential)) +
+      geom_line()
+plot(TS_Plot)
+
+decompose_solar_monthly<- decompose(ts_solar_monthly[,"solar_annual_gen"],"additive")
+plot(decompose_solar_monthly)
 ```
