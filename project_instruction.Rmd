@@ -34,6 +34,8 @@ wind_monthly <- read.csv(
 ```
 
 ```{r}
+#don't look at this code chunk it is not finished!!
+
 #Inspect data
 #head(electricity_price)
 nvar <- ncol(electricity_price) - 1
